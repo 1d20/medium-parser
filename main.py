@@ -3,11 +3,6 @@ from bs4 import BeautifulSoup
 
 def search_links (links):
 	for links in soup.select('div.postArticle-content a[data-action=open-post]'):
-		import requests
-from bs4 import BeautifulSoup
-
-def search_links (links):
-	for links in soup.select('div.postArticle-content a[data-action=open-post]'):
 		a =(links.get('href'))
 		responses = requests.get(a)
 		soup1 = BeautifulSoup(responses.content, 'html.parser')
