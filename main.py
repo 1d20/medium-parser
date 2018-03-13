@@ -10,13 +10,13 @@ BASE_URL = 'https://medium.com/search?q=Python'
 def get_article(link):
     responses = requests.get(link)
     soup = BeautifulSoup(responses.content, 'html.parser')
-    information_one_headers = {'title': '', 'text': '', 'tags': []}
-    information_one_headers['title'] = soup.select('.graf--title')[0].get_text()
+    content = {'title': '', 'text': '', 'tags': []}
+    content['title'] = soup.select('.graf--title')[0].get_text()
     for link in soup.select('div.section-inner'):
-        information_one_headers['text'] += link.get_text()
+        content['text'] += link.get_text()
     for link in soup.select('ul.tags a.link'):
-        information_one_headers['tags'].append(link.get_text())
-    return information_one_headers
+        content['tags'].append(link.get_text())
+    return content
 
 
 def search_links():
@@ -28,9 +28,5 @@ def search_links():
 
     with open('Information.txt', 'w') as f_out:
         json.dump(information, f_out)
-
-    with open('Information.txt', 'r') as f_in:
-        a1 = json.load(f_in)
-        print([a['title'] for a in a1])
 
 search_links()
