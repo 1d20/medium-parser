@@ -7,10 +7,10 @@ DB.connect()
 
 
 class Store(Model):
-    url = CharField(default="")
-    title = CharField(default="")
-    text = TextField(default="")
-    tags = CharField(default="")
+    url = CharField()
+    title = CharField()
+    text = TextField()
+    tags = CharField()
 
 
     class Meta:
