@@ -1,11 +1,8 @@
 # medium-parser
 
-import json
 import requests
 from bs4 import BeautifulSoup
 from models import Store
-
-BASE_URL = 'https://medium.com/search?q=Python'
 
 
 def get_article_db(link, url):
@@ -28,4 +25,10 @@ def search_links_db():
         url = link.get('href')
         get_article_db(link.get('href'), url)
 
-search_links_db()
+
+with open("keys.txt") as file:
+    keys = [row.strip() for row in file]
+
+for key in keys:
+    BASE_URL = 'https://medium.com/search?q=' + key
+    search_links_db()
