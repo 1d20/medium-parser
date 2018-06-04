@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from models import Store
 
+BASE_URL = 'https://medium.com/search?q='
 
 def get_article_db(link, url):
     text = ""
@@ -17,9 +18,8 @@ def get_article_db(link, url):
         tags += link.get_text() + "|"
     Store.get_or_create(url=url, title=title, tags=tags, text=text)
 
-
-def search_links_db():
-    response = requests.get(BASE_URL)
+def search_links_db(key):
+    response = requests.get(BASE_URL + key)
     sp = BeautifulSoup(response.content, 'html.parser')
     for link in sp.select('div.postArticle-content a[data-action=open-post]'):
         url = link.get('href')
@@ -30,5 +30,4 @@ with open("keys.txt") as file:
     keys = [row.strip() for row in file]
 
 for key in keys:
-    BASE_URL = 'https://medium.com/search?q=' + key
-    search_links_db()
+    search_links_db(key)
