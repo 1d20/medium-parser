@@ -2,7 +2,7 @@
 
 import requests
 from bs4 import BeautifulSoup
-from models import Store
+from models import Store, Tags
 
 BASE_URL = 'https://medium.com/search?q='
 
@@ -15,6 +15,8 @@ def get_article_db(link, url):
     for link in soup.select('div.section-inner'):
         text += link.get_text()
     for link in soup.select('ul.tags a.link'):
+        tag = link.get_text()
+        Tags.get_or_create(tags=tag)
         tags += link.get_text() + "|"
     Store.get_or_create(url=url, title=title, tags=tags, text=text)
 

@@ -16,5 +16,13 @@ class Store(Model):
     class Meta:
         database = DB
 
-DB.create_tables([Store])
+
+class Tags(Model):
+    tags = CharField()
+
+
+    class Meta:
+        database = DB
+
+DB.create_tables([Store, Tags])
 DB.close()
