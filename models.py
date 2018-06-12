@@ -1,28 +1,30 @@
 import sqlite3
-from peewee import Model, SqliteDatabase, CharField, TextField
+from peewee import Model, SqliteDatabase, CharField, TextField, ForeignKeyField, IntegerField
 
 
 DB = SqliteDatabase('medium.db')
 DB.connect()
 
 
+class Tags(Model):
+    tags_id = IntegerField()
+    tags = CharField()
+
+
+    class Meta:
+        database = DB
+
+
 class Store(Model):
     url = CharField()
     title = CharField()
     text = TextField()
-    tags = CharField()
+    tags = ForeignKeyField(Tags)
 
 
     class Meta:
         database = DB
 
 
-class Tags(Model):
-    tags = CharField()
-
-
-    class Meta:
-        database = DB
-
-DB.create_tables([Store, Tags])
+DB.create_tables([Tags, Store])
 DB.close()
