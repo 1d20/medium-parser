@@ -18,5 +18,5 @@ from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
-    url(r'^hello/', include('polls.urls')),
+    url(r'^/', include('polls.urls')),
 ]
