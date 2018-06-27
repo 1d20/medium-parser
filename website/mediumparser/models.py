@@ -23,4 +23,3 @@ class Article(models.Model):
     def short_text(self):
         return truncatechars(self.text, 100)
     short_text.short_description = 'text'
-

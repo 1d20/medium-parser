@@ -66,6 +66,12 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [
+            os.path.join(BASE_DIR, "mediumparser/templates")
+        ],
+    },
 ]
 
 WSGI_APPLICATION = 'website.wsgi.application'

@@ -1,0 +1,51 @@
+{% extends 'mediumparser/base.html' %}
+
+{% block title %}Medium{% endblock %}
+
+{% block content %}
+<div class="row" >
+    <div class="col-md-6">
+        {% for article in articles %}
+            <div class="bx-content">
+                <h2><a href='{{ article.url }}'>{{ article.title }}</a></h2>
+                <div class="news-content">{{ article.text|truncatechars:300 }}
+                    <ul>
+                        {% for tag in article.tags.all %}
+                            <li><h6>{{tag.name}}</h6></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-6">
+            <form action="/create" method="post">
+                {% csrf_token %}
+                    <fieldset>
+                      <legend>Create article</legend>
+                      <div class="form-group">
+                            <label class="col-form-label" for="inputDefault">Title</label>
+                            <input class="form-control" placeholder="Learning Python" id="title" name="title" type="text">
+                        </div>
+                        <div class="form-group">
+                                <label for="exampleTextarea">Text</label>
+                                <textarea class="form-control" id="text" name="text" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                                <label for="exampleSelect2">Tags</label>
+                                <select multiple="multiple" class="form-control" id="tags" name="tags">
+                                {% for article in articles %}
+                                {% for tag in article.tags.all %}
+                                  <option>{{tag.name}}</option>
+                                {% endfor %}
+                                {% endfor %}
+                                </select>
+                        </div>
+                    </fieldset>
+                    <button type="submit" class="btn btn-primary">Create article</button>
+                  </fieldset>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}
