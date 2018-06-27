@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Article
 from .forms import ArticleForm
 
@@ -16,3 +15,7 @@ def article_new(request):
     else:
         print(form.errors)
     return redirect(index)
+
+def article(request, id):
+    context = {"article": Article.objects.get(id=id)}
+    return render(request, "mediumparser/article.html", context)
