@@ -1,0 +1,26 @@
+{% extends 'mediumparser/base.html' %}
+
+{% block title %}Medium{% endblock %}
+
+{% block content %}
+<form action="/update" method="post">
+    {% csrf_token %}
+        <fieldset>
+        <legend>Update article</legend>
+        <div class="form-group has-success">
+            <label class="form-control-label" for="inputSuccess1">Title</label>
+            <input value="{{ article.title }}" class="form-control is-valid" id="inputValid" type="text">
+        </div>
+            <div class="form-group">
+                    <label for="exampleTextarea">Text</label>
+                    <textarea class="form-control" rows="20" id="text" name="text">{{ article.text }}</textarea>
+            </div>
+            <ul><h4>Tags:</h4>
+                {% for tag in article.tags.all %}
+                    <li><h5><input type="text" value="{{tag.name}}"></h5></li>
+                {% endfor %}
+            </ul>
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Create article</button>
+</form>
+{% endblock %}

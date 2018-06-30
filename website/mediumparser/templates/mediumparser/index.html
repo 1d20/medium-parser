@@ -3,9 +3,13 @@
 {% block title %}Medium{% endblock %}
 
 {% block content %}
+<form action="" method="get">
+    {{ filter.form.as_p }}
+    <input type="submit" value="Search"/> 
+</form>
 <div class="row" >
     <div class="col-md-6">
-        {% for article in articles %}
+        {% for article in filter.qs %}
             <div class="bx-content">
                 <h2><a href='article/{{ article.id }}'>{{ article.title }}</a></h2>
                 <div class="news-content">{{ article.text|truncatechars:300 }}
@@ -24,16 +28,16 @@
                     <fieldset>
                       <legend>Create article</legend>
                       <div class="form-group">
-                            <label class="col-form-label" for="inputDefault">Title</label>
-                            <input class="form-control" placeholder="Learning Python" id="title" name="title" type="text">
+                            <label class="col-form-label" for="id_title">Title</label>
+                            <input class="form-control" placeholder="Learning Python" id="id_title" name="title" type="text">
                         </div>
                         <div class="form-group">
-                                <label for="exampleTextarea">Text</label>
-                                <textarea class="form-control" id="text" name="text" rows="3"></textarea>
+                                <label for="id_text">Text</label>
+                                <textarea class="form-control" id="id_text" name="text" rows="3"></textarea>
                         </div>
                         <div class="form-group">
-                                <label for="exampleSelect2">Tags</label>
-                                <select multiple="multiple" class="form-control" id="tags" name="tags">
+                                <label for="id_tags">Tags</label>
+                                <select multiple="multiple" class="form-control" id="id_tags" name="tags">
                                 {% for article in articles %}
                                 {% for tag in article.tags.all %}
                                   <option>{{tag.name}}</option>
