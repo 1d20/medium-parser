@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-
+from django.views.generic.edit import FormView
 from .models import Article
 from .filters import ArticleFilter
 from .forms import ArticleForm

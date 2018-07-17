@@ -3,7 +3,7 @@
 {% block title %}Medium{% endblock %}
 
 {% block content %}
-<form action="/update" method="post">
+<form action="{{ article.id }}" method="post">
     {% csrf_token %}
         <fieldset>
         <legend>Update article</legend>
@@ -17,10 +17,10 @@
             </div>
             <ul><h4>Tags:</h4>
                 {% for tag in article.tags.all %}
-                    <li><h5><input type="text" value="{{tag.name}}"></h5></li>
+                    <li><h5>{{tag.name}}</h5></li>
                 {% endfor %}
             </ul>
         </fieldset>
-        <button type="submit" class="btn btn-primary">Create article</button>
+        <button type="submit" class="btn btn-primary">Update article</button>
 </form>
 {% endblock %}
