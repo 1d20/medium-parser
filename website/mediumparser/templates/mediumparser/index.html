@@ -3,10 +3,12 @@
 {% block title %}Medium{% endblock %}
 
 {% block content %}
+
 <form action="" method="get">
     {{ articles.form.as_p }}
     <input type="submit" value="Search"/> 
 </form>
+
 <div class="row" >
     <div class="col-md-6">
         {% for article in articles.qs %}

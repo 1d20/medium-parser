@@ -28,5 +28,16 @@ def article(request, id):
 
 
 def art_name(request, id):
-    context = {"article": Article.objects.get(id=id)}
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(index)
+    else:
+        form = ArticleForm(instance=Article.objects.get(id=id))
+
+        context = {
+            "article": Article.objects.get(id=id),
+            "form": form,
+        }
     return render(request, "mediumparser/article_user_id.html", context)
