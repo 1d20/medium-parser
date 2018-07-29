@@ -1,0 +1,75 @@
+{% extends "mediumparser/base.html" %}
+{% load staticfiles %}
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}" />
+{% endblock head %}
+{% block content %}
+<h4>Articles:</h4>
+<div class="row" >
+  <div class="col-md-6">
+      {% for article in articles %}
+          <div class="bx-content">
+              <h2><a href='article/{{ article.id }}'>{{ article.title }}</a></h2>
+              <div class="news-content">{{ article.text|truncatechars:300 }}
+                  <h5> Author : <a href="/profile/{{article.author_id}}">{{article.author}}</a> </h5>
+                  <ul>
+                      {% for tag in article.tags.all %}
+                          <li><h6>{{tag.name}}</h6></li>
+                      {% endfor %}
+                  </ul>
+              </div>
+          </div>
+      {% endfor %}
+  </div>
+  <div class="col-md-6">
+      <ul>
+        <li>Username: {{ user.username }}</li>
+        <li>User Full name: {{ user.get_full_name }}</li>
+        <li>Email: {{ user.email }}</li> 
+        <li> Session Started at: {{ user.last_login }}</li>
+      </ul>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    Edit
+  </button>
+</div>
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h2 class="form-signin-heading">Update user</h2>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body" >    
+          <form class="form-signin" id="updateForm" method = 'POST' action= '/profile_update/{{user.id}}' enctype = "multipart/form-data">
+            {% csrf_token %}
+            <div id="profile_form"></div>
+                </label><br>
+      </div>
+          <div class="modal-footer">
+                <label onclick="sendAjaxRequest()" class="btn btn-primary">Update</label>
+          </form>
+  </div>
+  </div>
+</div>
+<script>
+    function sendAjaxRequest(isRedirectPage=true){
+        $.ajax({
+            type: 'POST',
+            url: $("form#updateForm").attr("action"),
+            data: $("form#updateForm").serialize(), 
+        }).done(function(response) {
+            if(isRedirectPage) {
+                $(location).attr('href','/login');
+            } else {
+                $("div#profile_form").html(response.form);
+            }
+        })
+        .fail(function(response) {
+            $("div#profile_form").html(response.responseJSON.form);
+        });
+    }
+    sendAjaxRequest(false);
+</script>
+{% endblock %}
