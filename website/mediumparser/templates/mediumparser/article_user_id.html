@@ -1,6 +1,11 @@
 {% extends 'mediumparser/base.html' %}
+{% load static %}
 
 {% block title %}Medium{% endblock %}
+
+{% block head_ext %}
+<link rel="stylesheet" type="text/css" href="{% static 'mediumparser/article.css' %}" />
+{% endblock %}
 
 {% block content %}
 <form action="{{ article.id }}" method="post">
@@ -34,21 +39,37 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>
-        <form method="post">{% csrf_token %}
+        
             <div class="modal-body" >    
-                    {% for field in form %}
-                    <div class="fieldWrapper">
-                        {{ field.errors }}
-                        {{ field.label_tag }} {{ field }}
-                    </div>
-                {% endfor %}
+            <form method="post" id="updateForm" action="/article_update/{{ article.id }}">
+                {% csrf_token %}
+                <div id="article_form"></div>
             </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Update article    </button>
-            </div>
-        </form>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <label onclick="sendAjaxRequest()" class="btn btn-primary">Update article</label>
+                </div>
+            </form>
         </div>
         </div>
     </div>
+    <script>
+        function sendAjaxRequest(isRedirectPage=true){
+            $.ajax({
+                type: 'POST',
+                url: $("form#updateForm").attr("action"),
+                data: $("form#updateForm").serialize(), 
+            }).done(function(response) {
+                if(isRedirectPage) {
+                    $(location).attr('href','/article/{{article.id}}');
+                } else {
+                    $("div#article_form").html(response.form);
+                }
+            })
+            .fail(function(response) {
+                $("div#article_form").html(response.responseJSON.form);
+            });
+        }
+        sendAjaxRequest(false);
+    </script>
 {% endblock %}

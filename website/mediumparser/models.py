@@ -11,8 +11,9 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    url = models.URLField(max_length=50)
-    title = models.CharField(max_length=30)
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    url = models.URLField(max_length=255)
+    title = models.CharField(max_length=255)
     text = models.TextField()
     tags = models.ManyToManyField(Tag)
 
@@ -23,3 +24,5 @@ class Article(models.Model):
     def short_text(self):
         return truncatechars(self.text, 100)
     short_text.short_description = 'text'
+
+      
