@@ -83,9 +83,9 @@ def profile(request):
 def profile_id(request, id):
     context = {
             "articles": Article.objects.filter(author_id=id),
-            "id" : id
+            "author": User.objects.get(id=id),
             }
-    return render(request, "mediumparser/profile.html", context)
+    return render(request, "mediumparser/profile_id.html", context)
 
 def profile_update(request, id):
     instance = get_object_or_404(User, id=id)
