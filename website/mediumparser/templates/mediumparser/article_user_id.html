@@ -1,75 +1,60 @@
 {% extends 'mediumparser/base.html' %}
 {% load static %}
+{% load rest_framework %}
 
 {% block title %}Medium{% endblock %}
 
 {% block head_ext %}
 <link rel="stylesheet" type="text/css" href="{% static 'mediumparser/article.css' %}" />
+<script src="{% static 'mediumparser/js/article.js' %}"></script> 
 {% endblock %}
 
 {% block content %}
-<form action="{{ article.id }}" method="post">
-    {% csrf_token %}
-        <fieldset>
-        <div class="form-group has-success">
-            <label class="form-control-label" for="inputSuccess1">Title</label>
-            <input value="{{ article.title }}" class="form-control"  type="text">
-        </div>
-            <div class="form-group">
-                    <label for="exampleTextarea">Text</label>
-                    <textarea class="form-control" rows="20" id="text" name="text">{{ article.text }}</textarea>
-            </div>
-            <ul><h4>Tags:</h4>
-                {% for tag in article.tags.all %}
-                    <li><h5>{{tag.name}}</h5></li>
-                {% endfor %}
-            </ul>
-        </fieldset>
-        <button type="submit" class="btn btn-primary">Update article</button>
-</form>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-        Edit
-    </button>
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+<div style="display:none">
+    <div id="article-id">{{ pk }}</div>
+</div>
+
+<div id="show-article">
+    <p>
+        <label>Title: </label>
+        <div id="article-title"></div>
+    </p>
+    <p>
+        <label>URL: </label>
+        <div id="article-url"></div>
+    </p>
+    <p>
+        <label>Text: </label>
+        <div id="article-text"></div>
+    </p>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateArticleModal">Edit</button>
+
+<div class="modal fade" id="updateArticleModal" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
             Update article
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            </div>
-        
-            <div class="modal-body" >    
-            <form method="post" id="updateForm" action="/article_update/{{ article.id }}">
-                {% csrf_token %}
-                <div id="article_form"></div>
-            </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <label onclick="sendAjaxRequest()" class="btn btn-primary">Update article</label>
-                </div>
+        </div>
+    
+        <div class="modal-body" >    
+            <form id="updateArticleForm">
+                <label>Title: </label>
+                <input type="text" id="article-title" name="title"></input>
+                <label>URL: </label>
+                <input type="text" id="article-url" name="url"></input>
+                <label>Text: </label>
+                <input type="text" id="article-text" name="text"></input>
             </form>
         </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="submitArticleForm" class="btn btn-primary">Update article</button>
         </div>
     </div>
-    <script>
-        function sendAjaxRequest(isRedirectPage=true){
-            $.ajax({
-                type: 'POST',
-                url: $("form#updateForm").attr("action"),
-                data: $("form#updateForm").serialize(), 
-            }).done(function(response) {
-                if(isRedirectPage) {
-                    $(location).attr('href','/article/{{article.id}}');
-                } else {
-                    $("div#article_form").html(response.form);
-                }
-            })
-            .fail(function(response) {
-                $("div#article_form").html(response.responseJSON.form);
-            });
-        }
-        sendAjaxRequest(false);
-    </script>
+</div>
 {% endblock %}

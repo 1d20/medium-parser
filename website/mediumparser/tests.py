@@ -57,21 +57,21 @@ class MyTests(TestCase):
             "password" : "123",
         }
         form = UsersLoginForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid(), form.errors)
 
     def test_form_login_fail_password(self):
         form_data = { "username" : "example",
             "password" : "!23",
         }
         form = UsersLoginForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid(), form.errors)
 
     def test_form_login_is(self):
         form_data = { "username" : "123",
             "password" : "123123123",
         }
         form = UsersLoginForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid(), form.errors)
 
     def test_form_register_confirm_email(self):
         form_data = { "username" : "hello",
@@ -79,7 +79,7 @@ class MyTests(TestCase):
             "password" : "12345678",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid(), form.errors)
 
     def test_form_register_email_is(self):
         form_data = { "username" : "hello",
@@ -97,7 +97,7 @@ class MyTests(TestCase):
             "password" : "123",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid(), form.errors)
 
     def test_not_authenticate(self):
         self.assertTrue(self.user.is_anonymous)
@@ -109,4 +109,4 @@ class MyTests(TestCase):
             "password" : "1",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid(), form.errors)
