@@ -15,7 +15,7 @@ class Article(models.Model):
     url = models.URLField(max_length=255)
     title = models.CharField(max_length=255)
     text = models.TextField()
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     def show_url(self):
         return format_html("<a href='{url}'>{url}</a>", url=self.url)

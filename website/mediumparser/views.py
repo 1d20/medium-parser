@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
@@ -8,29 +8,19 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib.auth import get_user_model
 from .models import Article
-from .filters import ArticleFilter
+from .filters import ArticleFilter, TagsFilter
 from .forms import ArticleForm, UsersRegisterForm
+from django.http import HttpResponse, JsonResponse
 
-User = get_user_model()
+from rest_framework import generics, viewsets, decorators
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
-def article_update(request, id):
-    instance = get_object_or_404(Article, id=id)
+from .serializers import ArticleSerializer
 
-    if len(request.POST.keys()) == 1:
-        form = ArticleForm(instance=instance)
-        return HttpResponse(json.dumps({'form': form.as_p()}), content_type="application/json")
-    
-    form = ArticleForm(request.POST, instance=instance)
-    if form.is_valid():
-        form.save()
-        return HttpResponse(json.dumps({'result': 'ok'}), content_type="application/json")
-    
-    return HttpResponse(
-        json.dumps({'form': form.as_p()}),
-        content_type="application/json",
-        status=400
-    )
-    
+
+User = get_user_model()    
 
 def index(request):
     if request.method == 'POST':
@@ -49,17 +39,18 @@ def index(request):
     return render(request, "mediumparser/index.html", context)
 
 def art_name(request, id):
-    instance = get_object_or_404(Article, id=id)
-    form = ArticleForm(request.POST or None, instance=instance)
-    if form.is_valid():
-        form.save()
-        return redirect(art_name, id)
+    return render(request, "mediumparser/article_user_id.html", {'pk': id})
+    # instance = get_object_or_404(Article, id=id)
+    # form = ArticleForm(request.POST or None, instance=instance)
+    # if form.is_valid():
+    #     form.save()
+    #     return redirect(art_name, id)
 
-    context = {
-        "article": Article.objects.get(id=id),
-        "form": form,
-    }
-    return render(request, "mediumparser/article_user_id.html", context)
+    # context = {
+    #     "article": Article.objects.get(id=id),
+    #     "form": form,
+    # }
+    # return render(request, "mediumparser/article_user_id.html", context)
 
 def profile(request):
     if request.user.is_authenticated:
@@ -109,3 +100,18 @@ def profile_update(request, id):
         content_type="application/json",
         status=400
     )
+
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+    @decorators.list_route(["GET"])
+    def my_route(self, request):
+        # http://127.0.0.1:8000/articles/my_route/
+        return Response({'key': 'val'})
+
+    @decorators.detail_route(["GET"])
+    def title(self, request, pk):
+        # http://127.0.0.1:8000/articles/2/title/
+        obj = self.get_object()
+        return Response({'key': obj.title})
