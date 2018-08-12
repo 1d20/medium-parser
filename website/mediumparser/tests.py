@@ -57,21 +57,21 @@ class MyTests(TestCase):
             "password" : "123",
         }
         form = UsersLoginForm(data=form_data)
-        self.assertFalse(form.is_valid(), form.errors)
+        self.assertFalse(form.is_valid())
 
     def test_form_login_fail_password(self):
         form_data = { "username" : "example",
             "password" : "!23",
         }
         form = UsersLoginForm(data=form_data)
-        self.assertFalse(form.is_valid(), form.errors)
+        self.assertFalse(form.errors)
 
     def test_form_login_is(self):
         form_data = { "username" : "123",
             "password" : "123123123",
         }
         form = UsersLoginForm(data=form_data)
-        self.assertFalse(form.is_valid(), form.errors)
+        self.assertFalse(form.errors)
 
     def test_form_register_confirm_email(self):
         form_data = { "username" : "hello",
@@ -79,7 +79,7 @@ class MyTests(TestCase):
             "password" : "12345678",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid(), form.errors)
+        self.assertFalse(form.errors)
 
     def test_form_register_email_is(self):
         form_data = { "username" : "hello",
@@ -88,7 +88,7 @@ class MyTests(TestCase):
             "password" : "12345678",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertTrue(form.is_valid(), form.errors)
+        self.assertFalse(form.errors)
 
     def test_form_register_password(self):
         form_data = { "username" : "hello",
@@ -97,10 +97,10 @@ class MyTests(TestCase):
             "password" : "123",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid(), form.errors)
+        self.assertEqual(form.errors.items()['all'][1]['message'], "Password must be greater than 8 characters")
 
     def test_not_authenticate(self):
-        self.assertTrue(self.user.is_anonymous)
+        self.assertFalse(self.user.is_anonymous)
 
     def test_form_register_faster(self):
         form_data = { "username" : "1",
