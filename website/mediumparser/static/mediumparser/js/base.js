@@ -19,5 +19,6 @@ $.ajaxSetup({
 });
 
 const urls = {
-    articleDetailUrl: '/api/articles/'
+    articleDetailUrl: '/api/articles/',
+    profileDetailUrl: '/api/profile/'
 }
