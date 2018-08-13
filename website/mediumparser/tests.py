@@ -97,8 +97,12 @@ class MyTests(TestCase):
             "password" : "123",
         }
         form = UsersRegisterForm(data=form_data)
-        self.assertEqual(form.errors.items()['all'][1]['message'], "Password must be greater than 8 characters")
-
+        # print(dict(form.errors.items())[0])
+        print(dict(form.errors.as_json())[1])
+        print(dict(form.errors.items())["message"])
+        # self.assertEqual(len(list(form.errors.items())[0]), 1)
+        self.assertEqual(dict(form.errors.items())['__all__'][0]['message'], "Password must be greater than 8 characters")
+    
     def test_not_authenticate(self):
         self.assertFalse(self.user.is_anonymous)
 

@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}" />
+<script src="{% static 'mediumparser/js/profile.js' %}"></script> 
 {% endblock head %}
 {% block content %}
 <h4>Articles:</h4>
@@ -28,48 +29,36 @@
         <li>Email: {{ user.email }}</li> 
         <li> Session Started at: {{ user.last_login }}</li>
       </ul>
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-    Edit
-  </button>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateProfileModal">Edit</button>
+
+      <div class="modal fade" id="updateProfileModal" aria-hidden="true" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      Update profile
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+              
+                  <div class="modal-body" >    
+                      <form id="updateProfileForm">
+                          <label>Username: </label>
+                          <p><input type="text" id="profile-username" name="username"></input></p>
+                          <label>Email: </label>
+                          <p><input type="text" id="profile-email" name="email"></input></p> 
+                          <label>Confirm_email: </label>
+                          <p><input type="text" id="profile-confirm_email" name="confirm_email"></input></p>
+                          <label>Password: </label>
+                          <p><input type="text" id="profile-password" name="password"></input></p>
+                      </form>
+                  </div>
+      
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button id="submitProfileForm" class="btn btn-primary">Update profile</button>
+                  </div>
+              </div>
+          </div>
 </div>
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-  <div class="modal-content">
-      <div class="modal-header">
-      <h2 class="form-signin-heading">Update user</h2>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
-      </div>
-      <div class="modal-body" >    
-          <form class="form-signin" id="updateForm" method = 'POST' action= '/profile_update/{{user.id}}' enctype = "multipart/form-data">
-            {% csrf_token %}
-            <div id="profile_form"></div>
-                </label><br>
-      </div>
-          <div class="modal-footer">
-                <label onclick="sendAjaxRequest()" class="btn btn-primary">Update</label>
-          </form>
-  </div>
-  </div>
-</div>
-<script>
-    function sendAjaxRequest(isRedirectPage=true){
-        $.ajax({
-            type: 'POST',
-            url: $("form#updateForm").attr("action"),
-            data: $("form#updateForm").serialize(), 
-        }).done(function(response) {
-            if(isRedirectPage) {
-                $(location).attr('href','/login');
-            } else {
-                $("div#profile_form").html(response.form);
-            }
-        })
-        .fail(function(response) {
-            $("div#profile_form").html(response.responseJSON.form);
-        });
-    }
-    sendAjaxRequest(false);
-</script>
 {% endblock %}
