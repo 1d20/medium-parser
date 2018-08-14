@@ -17,7 +17,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import ArticleSerializer
+from .serializers import ArticleSerializer, ProfileSerializer
 
 
 User = get_user_model()    
@@ -43,7 +43,7 @@ def art_name(request, id):
 
 def profile(request):
     if request.user.is_authenticated:
-        return render(request, "mediumparser/profile.html", {"articles": Article.objects.filter(author_id=request.user.id)})
+        return render(request, "mediumparser/profile.html", {"articles": Article.objects.filter(author_id=request.user.id), 'pk': request.user.id})
     else: 
         return HttpResponseRedirect("/login")
 
@@ -64,3 +64,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
         # http://127.0.0.1:8000/articles/2/title/
         obj = self.get_object()
         return Response({'key': obj.title})
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = ProfileSerializer
+    
