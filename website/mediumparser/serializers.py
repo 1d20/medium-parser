@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Article
+from django.contrib.auth.models import User
 
 class ArticleSerializer(serializers.ModelSerializer):
 
@@ -24,3 +25,15 @@ class ArticleSerializer(serializers.ModelSerializer):
         instance.author = self.context['request'].user
         instance.save()
         return instance
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "email",
+            "confirm_email", 
+            "password",
+        ]
+        
